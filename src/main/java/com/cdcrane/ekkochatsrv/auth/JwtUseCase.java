@@ -1,12 +1,19 @@
 package com.cdcrane.ekkochatsrv.auth;
 
-import com.cdcrane.ekkochatsrv.auth.dto.JwtData;
+import com.cdcrane.ekkochatsrv.auth.dto.AccessJwtData;
+import com.cdcrane.ekkochatsrv.auth.dto.RefreshJwtData;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.Authentication;
 
+import java.util.UUID;
+
 public interface JwtUseCase {
 
-    JwtData createJwt(Authentication auth);
+    AccessJwtData createAccessJwt(Authentication auth);
 
-    Claims verifyJwt(String jwt);
+    RefreshJwtData createRefreshJwt(UUID userId);
+
+    Claims verifyAccessJwt(String jwt);
+
+    Claims verifyRefreshJwt(String jwt);
 }
