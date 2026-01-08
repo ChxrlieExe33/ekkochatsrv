@@ -2,6 +2,7 @@ package com.cdcrane.ekkochatsrv.auth;
 
 import com.cdcrane.ekkochatsrv.auth.dto.AccessJwtData;
 import com.cdcrane.ekkochatsrv.auth.dto.RefreshJwtData;
+import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -65,7 +66,7 @@ class JwtService implements JwtUseCase {
         String jwt =  Jwts.builder()
                 .issuer(issuer)
                 .subject("JWT Access token")
-                .claim("type", "access")
+                .claim("type", JwtTypes.ACCESS.name())
                 .claim("username", auth.getName())
                 .claim("authorities", auth.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
@@ -92,7 +93,7 @@ class JwtService implements JwtUseCase {
         String jwt = Jwts.builder()
                 .issuer(issuer)
                 .subject("JWT Refresh token")
-                .claim("type", "refresh")
+                .claim("type", JwtTypes.REFRESH.name())
                 .claim("jti", jti)
                 .claim("userId", userId)
                 .issuedAt(new Date())
