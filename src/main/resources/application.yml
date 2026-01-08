@@ -26,3 +26,6 @@ jwt:
   issuer: EkkoChatSRV
   refresh_expiration: 432000000 # 5d only for the refresh token
   access_expiration: 300000 # 5m only for access token
+
+cors:
+  allowed-origins: http://localhost:4200 # Overwrite with env variables
