@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 class UserService implements UserUseCase {
@@ -28,4 +30,11 @@ class UserService implements UserUseCase {
 
     }
 
+    @Override
+    public ApplicationUser findById(UUID id) {
+
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + id));
+
+    }
 }

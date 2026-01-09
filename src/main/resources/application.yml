@@ -23,6 +23,7 @@ logging:
 jwt:
   access_jwt_secret: SuperSecretAccessJwtEncryptionKeyYouShouldOverwriteWithEnvVariables
   refresh_jwt_secret: SuperSecretRefreshJwtEncryptionKeyYouShouldOverwriteWithEnvVariables
+  refresh_token_storage_pepper: PepperForTheStorageTokens
   issuer: EkkoChatSRV
   refresh_expiration: 432000000 # 5d only for the refresh token
   access_expiration: 300000 # 5m only for access token

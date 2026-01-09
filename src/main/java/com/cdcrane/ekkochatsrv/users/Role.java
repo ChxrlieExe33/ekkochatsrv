@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.users.roles;
+package com.cdcrane.ekkochatsrv.users;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
