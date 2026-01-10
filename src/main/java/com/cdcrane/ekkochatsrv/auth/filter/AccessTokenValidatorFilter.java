@@ -1,7 +1,10 @@
 package com.cdcrane.ekkochatsrv.auth.filter;
 
 import com.cdcrane.ekkochatsrv.auth.JwtUseCase;
+import com.cdcrane.ekkochatsrv.auth.SecurityConfig;
 import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
+import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
+import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,23 +36,30 @@ public class AccessTokenValidatorFilter extends OncePerRequestFilter {
 
             String token = jwt.substring(7);
 
-            Claims claims = jwtService.verifyAccessJwt(token);
+            try {
 
-            String username = claims.get("username", String.class);
-            String authorities = claims.get("authorities", String.class);
+                Claims claims = jwtService.verifyAccessJwt(token);
 
-            String tokenType = claims.get("type", String.class);
+                String username = claims.get(NamedJwtClaims.USERNAME.name(), String.class);
+                String authorities = claims.get(NamedJwtClaims.AUTHORITIES.name(), String.class);
 
-            if (!tokenType.equals(JwtTypes.ACCESS.name())) {
+                String tokenType = claims.get(NamedJwtClaims.TYPE.name(), String.class);
 
-                throw new BadCredentialsException("You cannot use a refresh token for accessing secured endpoints.");
+                if (!tokenType.equals(JwtTypes.ACCESS.name())) {
+
+                    throw new BadCredentialsException("You cannot use a refresh token for accessing secured endpoints.");
+                }
+
+                // Setting credentials to null means the user is already authenticated.
+                Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+            } catch (BadJwtException ex) { // Translate to BadCredentials since that can be handled in the security layer.
+                throw new BadCredentialsException(ex.getMessage());
             }
 
-            // Setting credentials to null means the user is already authenticated.
-            Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
-                    AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
 
         } else {
 
@@ -63,12 +73,12 @@ public class AccessTokenValidatorFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 
-        /* TODO: Uncomment when the SecurityConfig is finished.
+
         for (String uri : SecurityConfig.PUBLIC_URIS){
             if (request.getRequestURI().equals(uri)){
                 return true;
             }
-        }*/
+        }
 
         return false;
     }

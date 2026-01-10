@@ -18,7 +18,7 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 
 @Configuration
 @RequiredArgsConstructor
-class SecurityConfig {
+public class SecurityConfig {
 
     private final JwtUseCase jwtService;
     private final CorsConfig corsConfig;
@@ -26,7 +26,8 @@ class SecurityConfig {
     public static final String[] PUBLIC_URIS = {
             "/error",
             "/api/v1/auth/login",
-            "/api/v1/auth/register"
+            "/api/v1/user/register",
+            "/api/v1/auth/refresh"
     };
 
     @Bean

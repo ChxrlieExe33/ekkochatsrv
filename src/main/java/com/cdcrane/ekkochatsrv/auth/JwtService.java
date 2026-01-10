@@ -7,6 +7,8 @@ import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
 import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
 import com.cdcrane.ekkochatsrv.auth.exception.TokenNotFoundException;
+import com.cdcrane.ekkochatsrv.auth.refresh_token.RefreshTokenEntry;
+import com.cdcrane.ekkochatsrv.auth.refresh_token.RefreshTokenRepository;
 import com.cdcrane.ekkochatsrv.users.ApplicationUser;
 import com.cdcrane.ekkochatsrv.users.UserUseCase;
 import com.cdcrane.ekkochatsrv.users.Role;
@@ -168,7 +170,7 @@ class JwtService implements JwtUseCase {
         } catch (ExpiredJwtException e) {
             throw new BadJwtException("Your authentication has expired, please refresh your access token.");
         } catch (Exception e) {
-            throw new BadJwtException("Your authentication token is invalid or has been tampered with, please log in again.");
+            throw new BadJwtException("Your token is invalid, make sure you are using your access token.");
         }
     }
 
@@ -214,16 +216,21 @@ class JwtService implements JwtUseCase {
             throw new BadJwtException("You cannot use an access token to refresh.");
         }
 
-        UUID jti = refreshClaims.get(NamedJwtClaims.JTI.name(), UUID.class);
-        if (jti == null) {
+        String tokenId = refreshClaims.get(NamedJwtClaims.JTI.name(), String.class);
+
+        if (tokenId == null) {
             throw new BadJwtException("Refresh token was created wrong and does not contain a JTI.");
         }
+
+        UUID jti = UUID.fromString(tokenId);
 
         // Check to make sure it's not been revoked
         var originalRefreshEntry = refreshTokenRepo.findByJti(jti)
                 .orElseThrow(() -> new TokenNotFoundException("Refresh token not found on server, most likely revoked."));
 
-        var userId = refreshClaims.get(NamedJwtClaims.USERID.name(), UUID.class);
+        var userIdString = refreshClaims.get(NamedJwtClaims.USERID.name(), String.class);
+
+        UUID userId = UUID.fromString(userIdString);
 
         // Need to get user account from the database since the SecurityContext won't be populated.
         ApplicationUser user = userService.findById(userId);
@@ -265,6 +272,32 @@ class JwtService implements JwtUseCase {
 
     }
 
+    @Override
+    public void persistNewRefreshToken(RefreshJwtData refreshJwtData) {
 
+        try {
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+
+            byte[] hashBytes = digest.digest(
+                    (refreshJwtData.refreshJwt() + this.refreshTokenStoragePepper)
+                            .getBytes(StandardCharsets.UTF_8)
+            );
+
+            var hashedRefreshToken = Base64.getEncoder().encodeToString(hashBytes);
+
+            RefreshTokenEntry newRefreshEntry = RefreshTokenEntry.builder()
+                    .jti(refreshJwtData.jti())
+                    .hashedToken(hashedRefreshToken)
+                    .expiry(refreshJwtData.expiration())
+                    .build();
+
+            refreshTokenRepo.save(newRefreshEntry);
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("Hash type for refresh token storage is wrong!");
+        }
+
+    }
 
 }

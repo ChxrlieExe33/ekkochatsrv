@@ -7,4 +7,6 @@ import java.util.UUID;
 public interface UserUseCase extends UserDetailsService {
 
     ApplicationUser findById(UUID id);
+
+    ApplicationUser findByUsernameOrEmail(String usernameOrEmail);
 }

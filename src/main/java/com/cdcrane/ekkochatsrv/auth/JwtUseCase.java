@@ -23,4 +23,6 @@ public interface JwtUseCase {
     Claims verifyRefreshJwt(String jwt);
 
     TokenPairResponse refreshBothTokens(String refreshToken);
+
+    void persistNewRefreshToken(RefreshJwtData refreshJwtData);
 }

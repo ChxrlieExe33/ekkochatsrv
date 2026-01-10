@@ -37,4 +37,12 @@ class UserService implements UserUseCase {
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + id));
 
     }
+
+    @Override
+    public ApplicationUser findByUsernameOrEmail(String usernameOrEmail) {
+
+        return userRepo.findByEmailOrUsername(usernameOrEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + usernameOrEmail));
+
+    }
 }
