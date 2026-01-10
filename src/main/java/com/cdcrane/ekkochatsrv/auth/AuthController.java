@@ -2,7 +2,7 @@ package com.cdcrane.ekkochatsrv.auth;
 
 import com.cdcrane.ekkochatsrv.auth.dto.LoginRequest;
 import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
-import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
+import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

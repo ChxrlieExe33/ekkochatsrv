@@ -4,7 +4,7 @@ import com.cdcrane.ekkochatsrv.auth.JwtUseCase;
 import com.cdcrane.ekkochatsrv.auth.SecurityConfig;
 import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
-import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
+import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

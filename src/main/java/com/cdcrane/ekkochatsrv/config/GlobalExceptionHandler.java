@@ -1,7 +1,7 @@
 package com.cdcrane.ekkochatsrv.config;
 
-import com.cdcrane.ekkochatsrv.auth.exception.BadJwtException;
-import com.cdcrane.ekkochatsrv.auth.exception.TokenNotFoundException;
+import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
+import com.cdcrane.ekkochatsrv.auth.exceptions.TokenNotFoundException;
 import com.cdcrane.ekkochatsrv.config.dto.ExceptionErrorResponse;
 import com.cdcrane.ekkochatsrv.config.dto.ValidationErrorResponse;
 import com.cdcrane.ekkochatsrv.users.exceptions.UserNotFoundException;

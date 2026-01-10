@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth.exception.handlers;
+package com.cdcrane.ekkochatsrv.auth.exceptions.handlers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth.exception;
+package com.cdcrane.ekkochatsrv.auth.exceptions;
 
 public class BadJwtException extends RuntimeException {
 

@@ -1,7 +1,7 @@
 package com.cdcrane.ekkochatsrv.auth;
 
-import com.cdcrane.ekkochatsrv.auth.exception.handlers.EkkoAccessDeniedHandler;
-import com.cdcrane.ekkochatsrv.auth.exception.handlers.EkkoAuthEntryPoint;
+import com.cdcrane.ekkochatsrv.auth.exceptions.handlers.EkkoAccessDeniedHandler;
+import com.cdcrane.ekkochatsrv.auth.exceptions.handlers.EkkoAuthEntryPoint;
 import com.cdcrane.ekkochatsrv.auth.filter.AccessTokenValidatorFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
