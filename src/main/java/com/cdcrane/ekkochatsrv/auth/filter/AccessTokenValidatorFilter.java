@@ -1,7 +1,7 @@
 package com.cdcrane.ekkochatsrv.auth.filter;
 
-import com.cdcrane.ekkochatsrv.auth.JwtUseCase;
-import com.cdcrane.ekkochatsrv.auth.SecurityConfig;
+import com.cdcrane.ekkochatsrv.auth.internal.JwtUseCase;
+import com.cdcrane.ekkochatsrv.auth.internal.SecurityConfig;
 import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;

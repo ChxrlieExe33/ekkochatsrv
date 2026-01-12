@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
-class CorsConfig implements CorsConfigurationSource {
+public class CorsConfig implements CorsConfigurationSource {
 
     @Value("${cors.allowed-origins}")
     public String[] allowedOrigins;

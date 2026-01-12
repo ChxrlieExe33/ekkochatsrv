@@ -1,8 +1,9 @@
-package com.cdcrane.ekkochatsrv.auth;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
-import com.cdcrane.ekkochatsrv.users.ApplicationUser;
-import com.cdcrane.ekkochatsrv.users.UserUseCase;
+import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
+import com.cdcrane.ekkochatsrv.users.internal.ApplicationUser;
+import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,10 +29,10 @@ public class AuthService {
 
             Authentication authentication = authManager.authenticate(auth);
 
-            ApplicationUser user = userUseCase.findByUsernameOrEmail(usernameOrEmail);
+            UserDTO user = userUseCase.findByUsernameOrEmail(usernameOrEmail);
 
             var accessTokenData = jwtUseCase.createAccessJwt(authentication);
-            var refreshTokenData = jwtUseCase.createRefreshJwt(user.getUserId());
+            var refreshTokenData = jwtUseCase.createRefreshJwt(user.userId());
 
             jwtUseCase.persistNewRefreshToken(refreshTokenData);
 

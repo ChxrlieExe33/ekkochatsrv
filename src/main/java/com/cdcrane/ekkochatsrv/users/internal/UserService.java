@@ -1,5 +1,7 @@
-package com.cdcrane.ekkochatsrv.users;
+package com.cdcrane.ekkochatsrv.users.internal;
 
+import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
+import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
 import com.cdcrane.ekkochatsrv.users.exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,18 +34,28 @@ class UserService implements UserUseCase {
     }
 
     @Override
-    public ApplicationUser findById(UUID id) {
+    public UserDTO findById(UUID id) {
 
-        return userRepo.findById(id)
+        var u = userRepo.findByUserId(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + id));
 
+        return new UserDTO(u.getUserId(), u.getUsername(),
+                u.getFirstName(), u.getLastName(), u.getEmail(),
+                u.getRoles().stream()
+                        .map(Role::getAuthority)
+                        .collect(Collectors.toSet()));
     }
 
     @Override
-    public ApplicationUser findByUsernameOrEmail(String usernameOrEmail) {
+    public UserDTO findByUsernameOrEmail(String usernameOrEmail) {
 
-        return userRepo.findByEmailOrUsername(usernameOrEmail)
+        var u = userRepo.findByEmailOrUsernameWithRoles(usernameOrEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + usernameOrEmail));
 
+        return new UserDTO(u.getUserId(), u.getUsername(),
+                u.getFirstName(), u.getLastName(), u.getEmail(),
+                u.getRoles().stream()
+                        .map(Role::getAuthority)
+                        .collect(Collectors.toSet()));
     }
 }

@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth.refresh_token;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

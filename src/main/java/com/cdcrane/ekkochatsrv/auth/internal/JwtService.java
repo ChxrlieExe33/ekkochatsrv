@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import com.cdcrane.ekkochatsrv.auth.dto.AccessJwtData;
 import com.cdcrane.ekkochatsrv.auth.dto.RefreshJwtData;
@@ -7,11 +7,10 @@ import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import com.cdcrane.ekkochatsrv.auth.exceptions.TokenNotFoundException;
-import com.cdcrane.ekkochatsrv.auth.refresh_token.RefreshTokenEntry;
-import com.cdcrane.ekkochatsrv.auth.refresh_token.RefreshTokenRepository;
-import com.cdcrane.ekkochatsrv.users.ApplicationUser;
-import com.cdcrane.ekkochatsrv.users.UserUseCase;
-import com.cdcrane.ekkochatsrv.users.Role;
+import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
+import com.cdcrane.ekkochatsrv.users.internal.ApplicationUser;
+import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
+import com.cdcrane.ekkochatsrv.users.internal.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-class JwtService implements JwtUseCase {
+public class JwtService implements JwtUseCase {
 
     private final RefreshTokenRepository refreshTokenRepo;
     private final UserUseCase userService;
@@ -233,12 +232,9 @@ class JwtService implements JwtUseCase {
         UUID userId = UUID.fromString(userIdString);
 
         // Need to get user account from the database since the SecurityContext won't be populated.
-        ApplicationUser user = userService.findById(userId);
+        UserDTO user = userService.findById(userId);
 
-        var newAccessTokenData = this.createAccessJwt(user.getUsername(),
-                user.getRoles().stream()
-                .map(Role::getAuthority)
-                .collect(Collectors.toSet()));
+        var newAccessTokenData = this.createAccessJwt(user.username(), user.authorities());
 
         var newRefreshTokenData = this.createRefreshJwt(userId);
 

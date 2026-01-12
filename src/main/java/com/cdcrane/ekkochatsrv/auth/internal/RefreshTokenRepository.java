@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth.refresh_token;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

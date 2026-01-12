@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.config;
+package com.cdcrane.ekkochatsrv.config.internal;
 
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import com.cdcrane.ekkochatsrv.auth.exceptions.TokenNotFoundException;

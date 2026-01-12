@@ -1,4 +1,4 @@
-package com.cdcrane.ekkochatsrv.auth;
+package com.cdcrane.ekkochatsrv.auth.internal;
 
 import com.cdcrane.ekkochatsrv.auth.exceptions.handlers.EkkoAccessDeniedHandler;
 import com.cdcrane.ekkochatsrv.auth.exceptions.handlers.EkkoAuthEntryPoint;
