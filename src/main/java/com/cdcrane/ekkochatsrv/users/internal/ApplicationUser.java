@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,6 +33,10 @@ public class ApplicationUser {
     private String email;
 
     private Boolean enabled;
+
+    private Integer verificationCode;
+
+    private Date verificationCodeExpiration;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
