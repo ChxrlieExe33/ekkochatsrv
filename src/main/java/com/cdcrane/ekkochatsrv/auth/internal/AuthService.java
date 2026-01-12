@@ -2,7 +2,6 @@ package com.cdcrane.ekkochatsrv.auth.internal;
 
 import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
 import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
-import com.cdcrane.ekkochatsrv.users.internal.ApplicationUser;
 import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

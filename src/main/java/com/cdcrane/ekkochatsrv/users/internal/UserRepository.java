@@ -13,9 +13,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
     @Query("SELECT u FROM ApplicationUser u JOIN FETCH u.roles WHERE u.userId = ?1")
     Optional<ApplicationUser> findByUserId(UUID userId);
 
-    @Query("SELECT u FROM ApplicationUser u WHERE u.username = ?1 OR u.email = ?1")
-    Optional<ApplicationUser> findByEmailOrUsername(String username);
-
     @Query("SELECT u FROM ApplicationUser u JOIN FETCH u.roles WHERE u.username = ?1 OR u.email = ?1")
     Optional<ApplicationUser> findByEmailOrUsernameWithRoles(String username);
 }
