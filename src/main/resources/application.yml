@@ -12,13 +12,20 @@ spring:
     open-in-view: false
   main:
     banner-mode: off
-
+  mail:
+    username: youremail@test.com
+    password: PleaseOverwriteWithEnvVariables
+    host: smtp.gmail.com
+    port: 587
 logging:
   level:
     root: warn
     com:
       cdcrane:
         ekkochatsrv: info
+
+app:
+  frontend-base-url: http://localhost:4200/
 
 jwt:
   access_jwt_secret: SuperSecretAccessJwtEncryptionKeyYouShouldOverwriteWithEnvVariables
