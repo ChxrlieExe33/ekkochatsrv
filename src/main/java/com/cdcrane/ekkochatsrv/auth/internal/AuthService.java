@@ -7,6 +7,8 @@ import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -38,11 +40,21 @@ public class AuthService {
 
             return new  TokenPairResponse(accessTokenData, refreshTokenData);
 
+        } catch (DisabledException e) {
+
+            log.info("User {} tried to login when their account is not verified yet.", usernameOrEmail);
+            throw new BadAuthenticationException("Account has not been verified and enabled yet");
+
+        } catch (BadCredentialsException e) {
+
+            log.info("User {} tried to log in with invalid credentials", usernameOrEmail);
+            throw new BadAuthenticationException("Invalid credentials.");
+
         } catch (AuthenticationException e) {
 
             log.warn("Authentication failed for user {}", usernameOrEmail);
 
-            throw new BadAuthenticationException("Invalid credentials provided or account not verified.");
+            throw new BadAuthenticationException("Something went wrong with your authentication.");
 
         }
 

@@ -21,15 +21,12 @@ public class DeliveryListener {
 
         emailUseCase.sendVerificationEmail(e.email(), e.username(), e.generatedVerificationCode());
 
-        log.info("Verification email sent to {}.", e.email());
     }
 
     @ApplicationModuleListener
     public void sendEmailAgainOnVerificationFail(EmailVerificationFailEvent e) {
 
         emailUseCase.sendVerificationEmail(e.email(), e.username(), e.newVerificationCode());
-
-        log.info("New verification email sent to {}.", e.email());
 
     }
 }
