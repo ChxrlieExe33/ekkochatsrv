@@ -15,4 +15,10 @@ public interface UserRepository extends JpaRepository<ApplicationUser, UUID> {
 
     @Query("SELECT u FROM ApplicationUser u JOIN FETCH u.roles WHERE u.username = ?1 OR u.email = ?1")
     Optional<ApplicationUser> findByEmailOrUsernameWithRoles(String username);
+
+    Optional<ApplicationUser> findByEmail(String email);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
 }

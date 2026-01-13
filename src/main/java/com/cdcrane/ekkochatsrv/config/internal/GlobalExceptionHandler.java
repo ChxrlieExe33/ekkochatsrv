@@ -1,9 +1,13 @@
 package com.cdcrane.ekkochatsrv.config.internal;
 
+import com.cdcrane.ekkochatsrv.auth.exceptions.BadAuthenticationException;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import com.cdcrane.ekkochatsrv.auth.exceptions.TokenNotFoundException;
 import com.cdcrane.ekkochatsrv.config.dto.ExceptionErrorResponse;
 import com.cdcrane.ekkochatsrv.config.dto.ValidationErrorResponse;
+import com.cdcrane.ekkochatsrv.users.exceptions.IdentityTakenException;
+import com.cdcrane.ekkochatsrv.users.exceptions.InvalidVerificationException;
+import com.cdcrane.ekkochatsrv.users.exceptions.UserAlreadyVerifiedException;
 import com.cdcrane.ekkochatsrv.users.exceptions.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -114,6 +118,19 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(BadAuthenticationException.class)
+    public ResponseEntity<ExceptionErrorResponse> handleUserNotFound(BadAuthenticationException ex) {
+
+        ExceptionErrorResponse res = ExceptionErrorResponse.builder()
+                .message(ex.getMessage())
+                .errorCode(HttpStatus.UNAUTHORIZED.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+
+    }
+
     // ---------------------------------------------------
     // --------------- USER EXCEPTIONS -------------------
     // ---------------------------------------------------
@@ -128,6 +145,45 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
+
+    }
+
+    @ExceptionHandler(IdentityTakenException.class)
+    public ResponseEntity<ExceptionErrorResponse> handleUserNotFound(IdentityTakenException ex) {
+
+        ExceptionErrorResponse res = ExceptionErrorResponse.builder()
+                .message(ex.getMessage())
+                .errorCode(HttpStatus.CONFLICT.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return new ResponseEntity<>(res, HttpStatus.CONFLICT);
+
+    }
+
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
+    public ResponseEntity<ExceptionErrorResponse> handleUserNotFound(UserAlreadyVerifiedException ex) {
+
+        ExceptionErrorResponse res = ExceptionErrorResponse.builder()
+                .message(ex.getMessage())
+                .errorCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(InvalidVerificationException.class)
+    public ResponseEntity<ExceptionErrorResponse> handleUserNotFound(InvalidVerificationException ex) {
+
+        ExceptionErrorResponse res = ExceptionErrorResponse.builder()
+                .message(ex.getMessage())
+                .errorCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
 
     }
 

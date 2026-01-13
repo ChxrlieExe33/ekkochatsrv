@@ -27,6 +27,7 @@ public class SecurityConfig {
             "/error",
             "/api/v1/auth/login",
             "/api/v1/user/register",
+            "/api/v1/user/verify",
             "/api/v1/auth/refresh"
     };
 
@@ -57,16 +58,5 @@ public class SecurityConfig {
 
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) {
 
-        // Returns a DAOAuthenticationManager.
-        return authConfig.getAuthenticationManager();
-
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

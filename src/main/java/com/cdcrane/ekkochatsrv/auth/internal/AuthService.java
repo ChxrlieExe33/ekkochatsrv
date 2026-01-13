@@ -1,6 +1,7 @@
 package com.cdcrane.ekkochatsrv.auth.internal;
 
 import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
+import com.cdcrane.ekkochatsrv.auth.exceptions.BadAuthenticationException;
 import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
 import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,7 @@ public class AuthService {
 
             log.warn("Authentication failed for user {}", usernameOrEmail);
 
-            // TODO: Change for a custom exception.
-            throw new RuntimeException("Invalid username or password provided.");
+            throw new BadAuthenticationException("Invalid credentials provided or account not verified.");
 
         }
 
