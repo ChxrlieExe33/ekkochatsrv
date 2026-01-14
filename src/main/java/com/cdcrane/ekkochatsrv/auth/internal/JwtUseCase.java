@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface JwtUseCase {
 
-    AccessJwtData createAccessJwt(Authentication auth);
+    AccessJwtData createAccessJwt(Authentication auth, UUID userId);
 
-    AccessJwtData createAccessJwt(String username, Set<String> roles);
+    AccessJwtData createAccessJwt(String username, Set<String> roles, UUID userId);
 
     RefreshJwtData createRefreshJwt(UUID userId);
 

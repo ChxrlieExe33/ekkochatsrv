@@ -74,7 +74,7 @@ public class JwtService implements JwtUseCase {
      * @return The JWT and relevant data.
      */
     @Override
-    public AccessJwtData createAccessJwt(Authentication auth) {
+    public AccessJwtData createAccessJwt(Authentication auth, UUID userId) {
 
         Date expiration = new Date(System.currentTimeMillis() + accessTokenExpirationMs);
 
@@ -83,6 +83,7 @@ public class JwtService implements JwtUseCase {
                 .subject("JWT Access token")
                 .claim(NamedJwtClaims.TYPE.name(), JwtTypes.ACCESS.name())
                 .claim(NamedJwtClaims.USERNAME.name(), auth.getName())
+                .claim(NamedJwtClaims.USERID.name(), userId)
                 .claim(NamedJwtClaims.AUTHORITIES.name(), auth.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
                 .issuedAt(new Date())
@@ -101,7 +102,7 @@ public class JwtService implements JwtUseCase {
      * @return An object with the access token data.
      */
     @Override
-    public AccessJwtData createAccessJwt(String username, Set<String> roles) {
+    public AccessJwtData createAccessJwt(String username, Set<String> roles, UUID userId) {
 
         Date expiration = new Date(System.currentTimeMillis() + accessTokenExpirationMs);
 
@@ -110,6 +111,7 @@ public class JwtService implements JwtUseCase {
                 .subject("JWT Access token")
                 .claim(NamedJwtClaims.TYPE.name(), JwtTypes.ACCESS.name())
                 .claim(NamedJwtClaims.USERNAME.name(), username)
+                .claim(NamedJwtClaims.USERID.name(), userId)
                 .claim(NamedJwtClaims.AUTHORITIES.name(), String.join(",", roles))
                 .issuedAt(new Date())
                 .expiration(expiration)
@@ -232,7 +234,7 @@ public class JwtService implements JwtUseCase {
         // Need to get user account from the database since the SecurityContext won't be populated.
         UserDTO user = userService.findById(userId);
 
-        var newAccessTokenData = this.createAccessJwt(user.username(), user.authorities());
+        var newAccessTokenData = this.createAccessJwt(user.username(), user.authorities(), userId);
 
         var newRefreshTokenData = this.createRefreshJwt(userId);
 

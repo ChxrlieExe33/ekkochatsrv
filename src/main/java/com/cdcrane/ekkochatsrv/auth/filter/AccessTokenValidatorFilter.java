@@ -5,6 +5,7 @@ import com.cdcrane.ekkochatsrv.auth.internal.SecurityConfig;
 import com.cdcrane.ekkochatsrv.auth.enums.JwtTypes;
 import com.cdcrane.ekkochatsrv.auth.enums.NamedJwtClaims;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
+import com.cdcrane.ekkochatsrv.users.principal.EkkoUserPrincipal;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -42,6 +44,9 @@ public class AccessTokenValidatorFilter extends OncePerRequestFilter {
 
                 String username = claims.get(NamedJwtClaims.USERNAME.name(), String.class);
                 String authorities = claims.get(NamedJwtClaims.AUTHORITIES.name(), String.class);
+                String userIdString = claims.get(NamedJwtClaims.USERID.name(), String.class);
+
+                UUID  userId = UUID.fromString(userIdString);
 
                 String tokenType = claims.get(NamedJwtClaims.TYPE.name(), String.class);
 
@@ -50,9 +55,12 @@ public class AccessTokenValidatorFilter extends OncePerRequestFilter {
                     throw new BadCredentialsException("You cannot use a refresh token for accessing secured endpoints.");
                 }
 
-                // Setting credentials to null means the user is already authenticated.
-                Authentication auth = new UsernamePasswordAuthenticationToken(username, null,
-                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
+                var authoritiesCollection = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        new EkkoUserPrincipal(userId, username, null, authoritiesCollection, true),
+                        null, authoritiesCollection
+                        );
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
 

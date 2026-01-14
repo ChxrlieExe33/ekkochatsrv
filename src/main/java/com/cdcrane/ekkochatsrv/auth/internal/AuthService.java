@@ -4,6 +4,7 @@ import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadAuthenticationException;
 import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
 import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
+import com.cdcrane.ekkochatsrv.users.principal.EkkoUserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,10 +32,14 @@ public class AuthService {
 
             Authentication authentication = authManager.authenticate(auth);
 
-            UserDTO user = userUseCase.findByUsernameOrEmail(usernameOrEmail);
+            EkkoUserPrincipal principal = (EkkoUserPrincipal) authentication.getPrincipal();
 
-            var accessTokenData = jwtUseCase.createAccessJwt(authentication);
-            var refreshTokenData = jwtUseCase.createRefreshJwt(user.userId());
+            if (principal == null || principal.getUserId() == null) {
+                throw new BadAuthenticationException("Authentication principal configured incorrectly.");
+            }
+
+            var accessTokenData = jwtUseCase.createAccessJwt(authentication, principal.getUserId());
+            var refreshTokenData = jwtUseCase.createRefreshJwt(principal.getUserId());
 
             jwtUseCase.persistNewRefreshToken(refreshTokenData);
 

@@ -1,5 +1,6 @@
 package com.cdcrane.ekkochatsrv.users.internal;
 
+import com.cdcrane.ekkochatsrv.users.principal.EkkoUserPrincipal;
 import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import com.cdcrane.ekkochatsrv.users.dto.RegisterAccountRequest;
 import com.cdcrane.ekkochatsrv.users.dto.UserDTO;
@@ -16,7 +17,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,11 +44,9 @@ class UserService implements UserUseCase {
         var user = userRepo.findByEmailOrUsernameWithRoles(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
 
-        return new User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true,
-                user.getRoles().stream()
-                        .map(r -> new SimpleGrantedAuthority(r.getAuthority()))
-                        .toList()
-        );
+        return new EkkoUserPrincipal(user.getUserId(), user.getUsername(),
+                user.getPassword(), user.getRoles().stream().map(r -> new SimpleGrantedAuthority(r.getAuthority())).toList(),
+                user.getEnabled());
 
     }
 

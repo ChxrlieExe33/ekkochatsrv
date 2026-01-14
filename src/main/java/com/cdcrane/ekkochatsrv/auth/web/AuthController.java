@@ -5,9 +5,11 @@ import com.cdcrane.ekkochatsrv.auth.dto.TokenPairResponse;
 import com.cdcrane.ekkochatsrv.auth.exceptions.BadJwtException;
 import com.cdcrane.ekkochatsrv.auth.internal.AuthService;
 import com.cdcrane.ekkochatsrv.auth.internal.JwtService;
+import com.cdcrane.ekkochatsrv.users.principal.EkkoUserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,7 +45,14 @@ public class AuthController {
 
     @GetMapping
     public String testProtected() {
-        return "You are allowed";
+
+        EkkoUserPrincipal principal = (EkkoUserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal == null) {
+            return "Principal is null.";
+        }
+
+        return "You are allowed in " + SecurityContextHolder.getContext().getAuthentication().getName() + " with user-id " + principal.getUserId();
     }
 
 }
