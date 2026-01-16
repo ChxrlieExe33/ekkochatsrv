@@ -3,6 +3,7 @@ package com.cdcrane.ekkochatsrv.users.web;
 import com.cdcrane.ekkochatsrv.users.api.UserUseCase;
 import com.cdcrane.ekkochatsrv.users.dto.RegisterAccountRequest;
 import com.cdcrane.ekkochatsrv.users.dto.VerifyEmailRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserUseCase userUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> handleRegister(@RequestBody RegisterAccountRequest req) {
+    public ResponseEntity<Void> handleRegister(@RequestBody @Valid RegisterAccountRequest req) {
 
         userUseCase.registerUser(req);
 
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<Void> handleVerification(@RequestBody VerifyEmailRequest req) {
+    public ResponseEntity<Void> handleVerification(@RequestBody @Valid VerifyEmailRequest req) {
 
         userUseCase.handleEmailVerification(req);
 
